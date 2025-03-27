@@ -83,5 +83,4 @@ class NoPracticeView: UIView {
             make.width.equalTo(129 * Constraint.xCoeff)
         }
     }
-
 }
