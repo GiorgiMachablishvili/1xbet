@@ -67,8 +67,8 @@ class ScannerController: UIViewController {
         return view
     }()
 
-    private lazy var scannerView: ScannerView = {
-        let view = ScannerView()
+    private lazy var scannerManualView: ScannerManualView = {
+        let view = ScannerManualView()
         view.didPressBackButton = { [weak self] in
             self?.hideScannerView()
         }
@@ -89,7 +89,7 @@ class ScannerController: UIViewController {
         view.addSubview(scannerImage)
         view.addSubview(currentDayLabel)
         view.addSubview(scanButton)
-        view.addSubview(scannerView)
+        view.addSubview(scannerManualView)
     }
 
     private func setupConstraint() {
@@ -124,17 +124,17 @@ class ScannerController: UIViewController {
             make.width.equalTo(182 * Constraint.xCoeff)
         }
 
-        scannerView.snp.remakeConstraints { make in
+        scannerManualView.snp.remakeConstraints { make in
             make.edges.equalToSuperview()
         }
     }
 
     private func hideScannerView() {
-        scannerView.isHidden = true
+        scannerManualView.isHidden = true
     }
 
     @objc private func pressManualButton() {
-        scannerView.isHidden = false
+        scannerManualView.isHidden = false
     }
 
 }
