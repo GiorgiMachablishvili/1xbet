@@ -56,7 +56,7 @@ class CalendarDayCell: UICollectionViewCell {
     private func setupConstraints() {
         iconView.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(6 * Constraint.yCoeff)
-            make.centerX.equalToSuperview()
+            make.leading.equalTo(snp.leading).offset(10 * Constraint.xCoeff)
             make.height.equalTo(18 * Constraint.yCoeff)
             make.width.equalTo(18 * Constraint.xCoeff)
         }
@@ -82,7 +82,7 @@ class CalendarDayCell: UICollectionViewCell {
         // Show count if activity > 1
         if day.activityCount > 1 {
             countLabel.isHidden = false
-            countLabel.text = "+ \(day.activityCount)"
+            countLabel.text = "+\(day.activityCount)"
         } else {
             countLabel.isHidden = true
             countLabel.text = nil

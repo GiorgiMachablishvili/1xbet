@@ -15,4 +15,6 @@ extension UIColor {
 
     static let grayColorBackgroundColor = UIColor(hexString: "#080A0F")
 
+    static let blackTextColor = UIColor(hexString: "#0D0F14")
+
 }
