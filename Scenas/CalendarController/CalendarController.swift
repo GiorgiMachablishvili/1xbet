@@ -21,7 +21,7 @@ class CalendarController: UIViewController {
         layout.scrollDirection = .vertical
         layout.minimumLineSpacing = 12
         layout.minimumInteritemSpacing = 0
-        layout.headerReferenceSize = CGSize(width: view.frame.width, height: 40)
+        layout.headerReferenceSize = CGSize(width: view.frame.width, height: 80)
 
         let view = UICollectionView(frame: .zero, collectionViewLayout: layout)
         view.backgroundColor = .clear

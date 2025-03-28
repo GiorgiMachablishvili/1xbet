@@ -14,10 +14,10 @@ class CalendarDayCell: UICollectionViewCell {
 
         contentView.layer.cornerRadius = 12
         contentView.clipsToBounds = true
-        contentView.backgroundColor = .black
+        contentView.backgroundColor = .grayColorBackgroundColor
 
-        dayLabel.font = UIFont.systemFont(ofSize: 14)
-        dayLabel.textColor = .white
+        dayLabel.font = UIFont.funnelDesplayMedium(size: 10)
+        dayLabel.textColor = .whiteColor
         dayLabel.textAlignment = .center
 
         iconView.contentMode = .scaleAspectFit
