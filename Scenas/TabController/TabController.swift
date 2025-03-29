@@ -114,13 +114,5 @@ class TabController: UITabBarController,  UITabBarControllerDelegate {
             image.draw(in: CGRect(origin: .zero, size: size))
         }
     }
-
-    func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
-//        if let navController = viewController as? UINavigationController,
-//           navController.topViewController is ScannerController {
-//            navController.view.backgroundColor = .blueColor
-//        }
-
-    }
 }
 

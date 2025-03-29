@@ -138,7 +138,6 @@ class Onboarding: UIViewController {
                 make.width.equalTo(167 * Constraint.xCoeff)
             }
         }
-
         view.layoutIfNeeded()
     }
 }
