@@ -169,7 +169,7 @@ extension SettingController {
         section.contentInsets = .init(
             top: 24 * Constraint.yCoeff,
             leading: 10 * Constraint.xCoeff,
-            bottom: 0 * Constraint.yCoeff,
+            bottom: 30 * Constraint.yCoeff,
             trailing: 10 * Constraint.xCoeff
         )
         return section

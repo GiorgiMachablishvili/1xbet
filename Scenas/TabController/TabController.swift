@@ -103,7 +103,7 @@ class TabController: UITabBarController,  UITabBarControllerDelegate {
         // Style the Tab Bar (optional)
         tabBar.tintColor = .blueColor
         tabBar.unselectedItemTintColor = .whiteColor
-        tabBar.barTintColor = UIColor.blueColor
+        tabBar.barTintColor = .mainViewsBackgroundYellow
         tabBar.isTranslucent = false
     }
 
