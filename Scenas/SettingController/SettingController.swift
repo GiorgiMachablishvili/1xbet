@@ -57,6 +57,7 @@ class SettingController: UIViewController {
         collectionView.register(TopViewCell.self, forCellWithReuseIdentifier: String(describing: TopViewCell.self))
         collectionView.register(ExerciseStatisticsCell.self, forCellWithReuseIdentifier: String(describing: ExerciseStatisticsCell.self))
         collectionView.register(SupportCell.self, forCellWithReuseIdentifier: String(describing: SupportCell.self))
+        collectionView.register(ErrorSendingCell.self, forCellWithReuseIdentifier: String(describing: ErrorSendingCell.self))
     }
 }
 
@@ -72,6 +73,8 @@ extension SettingController {
                 return self?.exerciseStatisticsViewLayout()
             case 2:
                 return self?.supportViewLayout()
+            case 3:
+                return self?.errorViewLayout()
             default:
                 return self?.defaultLayout()
             }
@@ -119,9 +122,9 @@ extension SettingController {
         section.interGroupSpacing = 12
         section.contentInsets = .init(
             top: 16 * Constraint.yCoeff,
-            leading: 16 * Constraint.xCoeff,
+            leading: 10 * Constraint.xCoeff,
             bottom: 16 * Constraint.yCoeff,
-            trailing: 16 * Constraint.xCoeff
+            trailing: 10 * Constraint.xCoeff
         )
         return section
     }
@@ -143,9 +146,31 @@ extension SettingController {
         let section = NSCollectionLayoutSection(group: group)
         section.contentInsets = .init(
             top: 10 * Constraint.yCoeff,
-            leading: 0 * Constraint.xCoeff,
+            leading: 10 * Constraint.xCoeff,
             bottom: 0 * Constraint.yCoeff,
-            trailing: 0 * Constraint.xCoeff
+            trailing: 10 * Constraint.xCoeff
+        )
+        return section
+    }
+
+    func errorViewLayout() -> NSCollectionLayoutSection {
+        let itemSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1.0),
+            heightDimension: .absolute(90 * Constraint.yCoeff))
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+
+        let groupSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1.0),
+            heightDimension: .absolute(90 * Constraint.yCoeff)
+        )
+        let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
+
+        let section = NSCollectionLayoutSection(group: group)
+        section.contentInsets = .init(
+            top: 24 * Constraint.yCoeff,
+            leading: 10 * Constraint.xCoeff,
+            bottom: 0 * Constraint.yCoeff,
+            trailing: 10 * Constraint.xCoeff
         )
         return section
     }
@@ -173,7 +198,7 @@ extension SettingController {
 
 extension SettingController: UICollectionViewDelegate, UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 3
+        return 4
     }
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -184,6 +209,8 @@ extension SettingController: UICollectionViewDelegate, UICollectionViewDataSourc
             return exerciseOptions.count
         case 2:
             return supportButtons.count
+        case 3:
+            return 1
         default:
             return 0
         }
@@ -213,6 +240,13 @@ extension SettingController: UICollectionViewDelegate, UICollectionViewDataSourc
                 return UICollectionViewCell()
             }
             cell.configure(with: supportButtons[indexPath.item])
+            return cell
+        case 3:
+            guard let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: String(describing: ErrorSendingCell.self),
+                for: indexPath) as? ErrorSendingCell else {
+                return UICollectionViewCell()
+            }
             return cell
         default:
             return UICollectionViewCell()
