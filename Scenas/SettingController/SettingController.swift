@@ -5,6 +5,8 @@ import SnapKit
 
 class SettingController: UIViewController {
 
+    private var selectedIndex: Int = 0
+
     private lazy var collectionView: UICollectionView = {
         let view = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -24,8 +26,12 @@ class SettingController: UIViewController {
         .init(workoutName: "Walking", workoutIconName: "walk", distance: "658.83", activityCount: "14")
     ]
 
-    private var selectedIndex: Int = 0
-
+    private var supportButtons: [SupportButtonStatModel] = [
+        .init(name: "Terms of Use", image: "plus"),
+        .init(name: "Privacy Policy", image: "plus"),
+        .init(name: "Support", image: "plus"),
+        .init(name: "Rate US", image: "plus")
+    ]
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -111,46 +117,28 @@ extension SettingController {
 
         let section = NSCollectionLayoutSection(group: group)
         section.interGroupSpacing = 12
-        section.contentInsets = .init(top: 16, leading: 16, bottom: 16, trailing: 16)
+        section.contentInsets = .init(
+            top: 16 * Constraint.yCoeff,
+            leading: 16 * Constraint.xCoeff,
+            bottom: 16 * Constraint.yCoeff,
+            trailing: 16 * Constraint.xCoeff
+        )
         return section
     }
-
-
-//    func exerciseStatisticsViewLayout() -> NSCollectionLayoutSection {
-//        let itemSize = NSCollectionLayoutSize(
-//            widthDimension: .fractionalWidth(1.0),
-//            heightDimension: .absolute(350 * Constraint.yCoeff)
-//        )
-//        let item = NSCollectionLayoutItem(layoutSize: itemSize)
-//
-//        let groupSize = NSCollectionLayoutSize(
-//            widthDimension: .fractionalWidth(1.0),
-//            heightDimension: .absolute(350 * Constraint.yCoeff)
-//        )
-//        let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
-//
-//        let section = NSCollectionLayoutSection(group: group)
-//        section.contentInsets = .init(
-//            top: 10 * Constraint.yCoeff,
-//            leading: 0 * Constraint.xCoeff,
-//            bottom: 0 * Constraint.yCoeff,
-//            trailing: 0 * Constraint.xCoeff
-//        )
-//        return section
-//    }
 
     func supportViewLayout() -> NSCollectionLayoutSection {
         let itemSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1.0),
-            heightDimension: .absolute(41 * Constraint.yCoeff)
+            heightDimension: .absolute(50 * Constraint.yCoeff)
         )
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
 
         let groupSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1.0),
-            heightDimension: .absolute(41 * Constraint.yCoeff)
+            heightDimension: .absolute(200 * Constraint.yCoeff)
         )
         let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
+//        group.interItemSpacing = .fixed(12)
 
         let section = NSCollectionLayoutSection(group: group)
         section.contentInsets = .init(
@@ -195,7 +183,7 @@ extension SettingController: UICollectionViewDelegate, UICollectionViewDataSourc
         case 1:
             return exerciseOptions.count
         case 2:
-            return 1
+            return supportButtons.count
         default:
             return 0
         }
@@ -224,6 +212,7 @@ extension SettingController: UICollectionViewDelegate, UICollectionViewDataSourc
                 for: indexPath) as? SupportCell else {
                 return UICollectionViewCell()
             }
+            cell.configure(with: supportButtons[indexPath.item])
             return cell
         default:
             return UICollectionViewCell()
@@ -231,7 +220,29 @@ extension SettingController: UICollectionViewDelegate, UICollectionViewDataSourc
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        selectedIndex = indexPath.item
-        collectionView.reloadSections(IndexSet(integer: 1))
+        switch indexPath.section {
+        case 1:
+            selectedIndex = indexPath.item
+            collectionView.reloadSections(IndexSet(integer: 1))
+
+        case 2:
+            let selectedSupportItem = supportButtons[indexPath.item]
+            if selectedSupportItem.name == "Terms of Use" {
+                print("pressed term button")
+            }
+            if selectedSupportItem.name == "Privacy Policy" {
+                print("pressed policy button")
+            }
+            if selectedSupportItem.name == "Support" {
+                print("pressed Support button")
+            }
+            if selectedSupportItem.name == "Rate US" {
+                print("pressed Rate button")
+            }
+
+        default:
+            break
+        }
     }
+
 }
