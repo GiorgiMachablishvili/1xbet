@@ -13,10 +13,10 @@ class SupportCell: UICollectionViewCell {
     }()
 
     private lazy var buttonNameLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .whiteColor
-        label.font = UIFont.funnelDesplayMedium(size: 14)
-        return label
+        let view = UILabel()
+        view.textColor = .whiteColor
+        view.font = UIFont.funnelDesplayMedium(size: 14)
+        return view
     }()
 
     private lazy var iconImageView: UIImageView = {

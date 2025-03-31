@@ -16,7 +16,7 @@ class ExerciseStatisticsCell: UICollectionViewCell {
     private lazy var iconBackgroundView: UIView = {
         let view = UIView()
         view.backgroundColor = .grayColorBackgroundColor
-        view.layer.cornerRadius = 16
+        view.makeRoundCorners(16)
         return view
     }()
 
@@ -27,24 +27,24 @@ class ExerciseStatisticsCell: UICollectionViewCell {
     }()
 
     private lazy var titleLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .whiteColor
-        label.font = UIFont.funnelDesplayMedium(size: 14)
-        return label
+        let view = UILabel()
+        view.textColor = .whiteColor
+        view.font = UIFont.funnelDesplayMedium(size: 14)
+        return view
     }()
 
     private lazy var distanceLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .whiteColor
-        label.font = UIFont.funnelDesplayBold(size: 14)
-        return label
+        let view = UILabel()
+        view.textColor = .whiteColor
+        view.font = UIFont.funnelDesplayBold(size: 14)
+        return view
     }()
 
     private lazy var activityLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .gray
-        label.font = UIFont.funnelDesplayMedium(size: 12)
-        return label
+        let view = UILabel()
+        view.textColor = .gray
+        view.font = UIFont.funnelDesplayMedium(size: 12)
+        return view
     }()
 
     override init(frame: CGRect) {
