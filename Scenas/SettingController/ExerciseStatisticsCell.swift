@@ -23,6 +23,7 @@ class ExerciseStatisticsCell: UICollectionViewCell {
     private lazy var iconImageView: UIImageView = {
         let view = UIImageView()
         view.contentMode = .scaleAspectFit
+        view.tintColor = .whiteColor
         return view
     }()
 
@@ -102,8 +103,11 @@ class ExerciseStatisticsCell: UICollectionViewCell {
         titleLabel.text = data.workoutName
         distanceLabel.text = "\(data.distance)km"
         activityLabel.text = "\(data.activityCount) Activity"
-        iconImageView.image = UIImage(named: data.workoutIconName)
+
+        iconImageView.image = UIImage(named: data.workoutIconName)?.withRenderingMode(.alwaysTemplate)
 
         containerView.backgroundColor = selected ? .blueColor : .blackTextColor
+        iconImageView.tintColor = selected ? .blueColor : .whiteColor
     }
+
 }
