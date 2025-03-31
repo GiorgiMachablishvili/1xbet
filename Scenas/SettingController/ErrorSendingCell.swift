@@ -30,6 +30,17 @@ class ErrorSendingCell: UICollectionViewCell {
         return view
     }()
 
+    private lazy var sendButton: UIButton = {
+        let view = UIButton(frame: .zero)
+        view.setTitle("Send", for: .normal)
+        view.contentMode = .scaleAspectFit
+        view.titleLabel?.font = UIFont.funnelDesplayMedium(size: 16)
+        view.backgroundColor = .blueColor
+        view.makeRoundCorners(30)
+        view.addTarget(self, action: #selector(pressSendButton), for: .touchUpInside)
+        return view
+    }()
+
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -46,6 +57,7 @@ class ErrorSendingCell: UICollectionViewCell {
         addSubview(errorBackgroundView)
         addSubview(questionLabel)
         addSubview(errorTextFiled)
+        addSubview(sendButton)
     }
 
     private func setupConstraint() {
@@ -63,5 +75,16 @@ class ErrorSendingCell: UICollectionViewCell {
             make.leading.trailing.equalTo(errorBackgroundView).inset(16 * Constraint.xCoeff)
             make.height.equalTo(32 * Constraint.yCoeff)
         }
+
+        sendButton.snp.remakeConstraints { make in
+            make.top.equalTo(errorTextFiled.snp.bottom).offset(30 * Constraint.yCoeff)
+            make.centerX.equalTo(errorBackgroundView)
+            make.height.equalTo(60 * Constraint.yCoeff)
+            make.width.equalTo(182 * Constraint.yCoeff)
+        }
+    }
+
+    @objc func pressSendButton() {
+
     }
 }

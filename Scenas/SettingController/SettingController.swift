@@ -156,12 +156,12 @@ extension SettingController {
     func errorViewLayout() -> NSCollectionLayoutSection {
         let itemSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1.0),
-            heightDimension: .absolute(90 * Constraint.yCoeff))
+            heightDimension: .absolute(180 * Constraint.yCoeff))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
 
         let groupSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1.0),
-            heightDimension: .absolute(90 * Constraint.yCoeff)
+            heightDimension: .absolute(180 * Constraint.yCoeff)
         )
         let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
 
