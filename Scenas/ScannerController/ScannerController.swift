@@ -67,14 +67,13 @@ class ScannerController: UIViewController {
         return view
     }()
 
-    private lazy var scannerManualView: ScannerManualView = {
-        let view = ScannerManualView()
-        view.didPressBackButton = { [weak self] in
-            self?.hideScannerView()
-        }
-        view.isHidden = true
-        return view
-    }()
+//    private lazy var scannerManualView: ScannerManualView = {
+//        let view = ScannerManualView()
+//        view.didPressBackButton = { [weak self] in
+//            self?.hideScannerView()
+//        }
+//        return view
+//    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -89,7 +88,7 @@ class ScannerController: UIViewController {
         view.addSubview(scannerImage)
         view.addSubview(currentDayLabel)
         view.addSubview(scanButton)
-        view.addSubview(scannerManualView)
+//        view.addSubview(scannerManualView)
     }
 
     private func setupConstraint() {
@@ -124,17 +123,18 @@ class ScannerController: UIViewController {
             make.width.equalTo(182 * Constraint.xCoeff)
         }
 
-        scannerManualView.snp.remakeConstraints { make in
-            make.edges.equalToSuperview()
-        }
+//        scannerManualView.snp.remakeConstraints { make in
+//            make.edges.equalToSuperview()
+//        }
     }
 
-    private func hideScannerView() {
-        scannerManualView.isHidden = true
-    }
-
+//    private func hideScannerView() {
+//        scannerManualView.isHidden = true
+//    }
+//
     @objc private func pressManualButton() {
-        scannerManualView.isHidden = false
+        let ScannerManualVC = ScannerManualController()
+        navigationController?.pushViewController(ScannerManualVC, animated: true)
     }
 
 }

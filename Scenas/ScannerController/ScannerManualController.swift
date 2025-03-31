@@ -3,9 +3,7 @@
 import UIKit
 import SnapKit
 
-class ScannerManualView: UIView {
-
-    var didPressBackButton: (() -> Void)?
+class ScannerManualController: UIViewController {
 
     var hour: Double = 0.0
 
@@ -153,9 +151,9 @@ class ScannerManualView: UIView {
         return view
     }()
 
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        backgroundColor = .mainViewsBackgroundYellow
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .mainViewsBackgroundYellow
 
         setup()
         setupConstraint()
@@ -163,41 +161,37 @@ class ScannerManualView: UIView {
         updatePlaceHolder()
     }
 
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
     private func setup() {
-        addSubview(backButton)
-        addSubview(scanButton)
-        addSubview(trainingDurationLabel)
-        addSubview(timeStackView)
-        addSubview(distanceSuspendedLabel)
-        addSubview(kmButton)
-        addSubview(milesButton)
-        addSubview(workoutDistanceTextField)
-        addSubview(kmOrMileLabel)
-        addSubview(kmHourView)
-        addSubview(saveButton)
+        view.addSubview(backButton)
+        view.addSubview(scanButton)
+        view.addSubview(trainingDurationLabel)
+        view.addSubview(timeStackView)
+        view.addSubview(distanceSuspendedLabel)
+        view.addSubview(kmButton)
+        view.addSubview(milesButton)
+        view.addSubview(workoutDistanceTextField)
+        view.addSubview(kmOrMileLabel)
+        view.addSubview(kmHourView)
+        view.addSubview(saveButton)
     }
 
     private func setupConstraint() {
         backButton.snp.remakeConstraints { make in
-            make.top.equalTo(snp.top).offset(60 * Constraint.yCoeff)
-            make.leading.equalTo(snp.leading).offset(10 * Constraint.xCoeff)
+            make.top.equalTo(view.snp.top).offset(60 * Constraint.yCoeff)
+            make.leading.equalTo(view.snp.leading).offset(10 * Constraint.xCoeff)
             make.height.width.equalTo(44 * Constraint.yCoeff)
         }
 
         scanButton.snp.remakeConstraints { make in
             make.centerY.equalTo(backButton)
-            make.trailing.equalTo(snp.trailing).offset(-10 * Constraint.xCoeff)
+            make.trailing.equalTo(view.snp.trailing).offset(-10 * Constraint.xCoeff)
             make.height.equalTo(44 * Constraint.yCoeff)
             make.width.equalTo(84 * Constraint.xCoeff)
         }
 
         trainingDurationLabel.snp.remakeConstraints { make in
             make.top.equalTo(backButton.snp.bottom).offset(144 * Constraint.yCoeff)
-            make.leading.equalTo(snp.leading).offset(10 * Constraint.xCoeff)
+            make.leading.equalTo(view.snp.leading).offset(10 * Constraint.xCoeff)
         }
 
         timeStackView.snp.remakeConstraints { make in
@@ -215,7 +209,7 @@ class ScannerManualView: UIView {
 
         distanceSuspendedLabel.snp.remakeConstraints { make in
             make.top.equalTo(timeStackView.snp.bottom).offset(47 * Constraint.yCoeff)
-            make.leading.equalTo(snp.leading).offset(10 * Constraint.xCoeff)
+            make.leading.equalTo(view.snp.leading).offset(10 * Constraint.xCoeff)
         }
 
         kmButton.snp.remakeConstraints { make in
@@ -227,7 +221,7 @@ class ScannerManualView: UIView {
 
         milesButton.snp.remakeConstraints { make in
             make.centerY.equalTo(distanceSuspendedLabel)
-            make.trailing.equalTo(snp.trailing).offset(-10 * Constraint.xCoeff)
+            make.trailing.equalTo(view.snp.trailing).offset(-10 * Constraint.xCoeff)
             make.height.equalTo(24 * Constraint.yCoeff)
             make.width.equalTo(48 * Constraint.xCoeff)
         }
@@ -252,7 +246,7 @@ class ScannerManualView: UIView {
 
         saveButton.snp.remakeConstraints { make in
             make.leading.trailing.equalToSuperview().inset(104 * Constraint.xCoeff)
-            make.bottom.equalTo(snp.bottom).offset(-44 * Constraint.yCoeff)
+            make.bottom.equalTo(view.snp.bottom).offset(-44 * Constraint.yCoeff)
             make.height.equalTo(60 * Constraint.yCoeff)
         }
     }
@@ -279,7 +273,7 @@ class ScannerManualView: UIView {
     }
 
     @objc private func pressBackButton() {
-        didPressBackButton?()
+        navigationController?.popViewController(animated: true)
     }
 
     @objc private func pressKmButton() {
