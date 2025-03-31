@@ -23,7 +23,7 @@ class KmHourView: UIView {
 
     lazy var distanceLabel: UILabel = {
         let view = UILabel(frame: .zero)
-        view.text = "0.5"
+        view.text = "0.0"
         view.textColor = .whiteColor
         view.font = UIFont.funnelDesplayMedium(size: 24)
         view.textAlignment = .left

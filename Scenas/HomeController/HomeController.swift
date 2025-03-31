@@ -65,6 +65,11 @@ class HomeController: UIViewController {
             make.leading.bottom.trailing.equalToSuperview()
         }
     }
+
+    private func navigateToScannerManual() {
+        let scannerManualVC = ScannerManualController()
+        navigationController?.pushViewController(scannerManualVC, animated: true)
+    }
 }
 
 
@@ -82,11 +87,12 @@ extension HomeController: UICollectionViewDelegate, UICollectionViewDataSource, 
 
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         if kind == UICollectionView.elementKindSectionHeader {
-            let header = collectionView.dequeueReusableSupplementaryView(
-                ofKind: kind,
-                withReuseIdentifier: "WorkoutHistoryHeaderView",
-                for: indexPath
-            ) as! WorkoutHistoryHeaderView
+            guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "WorkoutHistoryHeaderView", for: indexPath) as? WorkoutHistoryHeaderView else {
+                return UICollectionReusableView()
+            }
+            header.didTapPlusButton = { [weak self] in
+                self?.navigateToScannerManual()
+            }
             return header
         }
         return UICollectionReusableView()

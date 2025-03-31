@@ -5,6 +5,8 @@ import SnapKit
 
 class WorkoutHistoryHeaderView: UICollectionReusableView {
 
+    var didTapPlusButton: (() -> Void)?
+
     private lazy var titleLabel: UILabel = {
         let view = UILabel()
         view.text = "History"
@@ -68,5 +70,6 @@ class WorkoutHistoryHeaderView: UICollectionReusableView {
 
     @objc func pressPlusButton() {
         print("press plus button")
+        didTapPlusButton?()
     }
-}
+} 
