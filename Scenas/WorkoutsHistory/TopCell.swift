@@ -16,7 +16,7 @@ class TopCell: UICollectionViewCell {
         return view
     }()
 
-    private lazy var workoutTitle: UILabel = {
+    lazy var workoutTitle: UILabel = {
         let view = UILabel(frame: .zero)
         view.text = "Running"
         view.textColor = .whiteColor
@@ -84,17 +84,17 @@ class TopCell: UICollectionViewCell {
 
         titleLabel.snp.remakeConstraints { make in
             make.bottom.equalTo(snp.bottom).offset(-20 * Constraint.yCoeff)
-            make.leading.equalTo(snp.leading).offset(10 * Constraint.xCoeff)
+            make.leading.equalTo(snp.leading).offset(16 * Constraint.xCoeff)
         }
 
         subtitleLabel.snp.remakeConstraints { make in
             make.top.equalTo(titleLabel.snp.bottom).offset(2 * Constraint.yCoeff)
-            make.leading.equalTo(snp.leading).offset(10 * Constraint.xCoeff)
+            make.leading.equalTo(snp.leading).offset(16 * Constraint.xCoeff)
         }
 
         plusButton.snp.remakeConstraints { make in
             make.top.equalTo(titleLabel.snp.top).offset(2 * Constraint.yCoeff)
-            make.trailing.equalTo(snp.trailing).offset(-10 * Constraint.xCoeff)
+            make.trailing.equalTo(snp.trailing).offset(-16 * Constraint.xCoeff)
             make.height.width.equalTo(32)
         }
     }

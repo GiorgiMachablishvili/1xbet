@@ -106,8 +106,8 @@ class ExerciseStatisticsCell: UICollectionViewCell {
 
         iconImageView.image = UIImage(named: data.workoutIconName)?.withRenderingMode(.alwaysTemplate)
 
-        containerView.backgroundColor = selected ? .blueColor : .blackTextColor
-        iconImageView.tintColor = selected ? .blueColor : .whiteColor
+//        containerView.backgroundColor = selected ? .blueColor : .blackTextColor
+//        iconImageView.tintColor = selected ? .blueColor : .whiteColor
     }
 
 }

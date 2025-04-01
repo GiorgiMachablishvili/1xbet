@@ -30,6 +30,7 @@ class ScannerManualController: UIViewController {
         view.backgroundColor = .whiteColor
         view.makeRoundCorners(22)
         view.contentMode = .scaleAspectFit
+        view.addTarget(self, action: #selector(pressScanButton), for: .touchUpInside)
         return view
     }()
 
@@ -376,6 +377,11 @@ class ScannerManualController: UIViewController {
 
     @objc private func handleInputChange() {
         calculateAndDisplaySpeed()
+    }
+
+    @objc private func pressScanButton() {
+        let scannerVC = ScannerController()
+        navigationController?.pushViewController(scannerVC, animated: true)
     }
 
     @objc private func pressSaveButton() {

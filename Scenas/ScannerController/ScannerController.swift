@@ -67,14 +67,6 @@ class ScannerController: UIViewController {
         return view
     }()
 
-//    private lazy var scannerManualView: ScannerManualView = {
-//        let view = ScannerManualView()
-//        view.didPressBackButton = { [weak self] in
-//            self?.hideScannerView()
-//        }
-//        return view
-//    }()
-
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -97,41 +89,33 @@ class ScannerController: UIViewController {
             make.leading.equalTo(view.snp.leading).offset(10 * Constraint.xCoeff)
             make.height.width.equalTo(44 * Constraint.yCoeff)
         }
-
+        
         manualInputButton.snp.remakeConstraints { make in
             make.centerY.equalTo(backButton)
             make.trailing.equalTo(view.snp.trailing).offset(-10 * Constraint.xCoeff)
             make.height.equalTo(44 * Constraint.yCoeff)
             make.width.equalTo(136 * Constraint.xCoeff)
         }
-
+        
         scannerImage.snp.remakeConstraints { make in
             make.centerX.equalToSuperview()
             make.bottom.equalTo(scanButton.snp.top).offset(-110 * Constraint.yCoeff)
             make.height.width.equalTo(60 * Constraint.yCoeff)
         }
-
+        
         currentDayLabel.snp.remakeConstraints { make in
             make.top.equalTo(scannerImage.snp.bottom).offset(16 * Constraint.yCoeff)
             make.leading.trailing.equalTo(10 * Constraint.xCoeff)
         }
-
+        
         scanButton.snp.remakeConstraints { make in
             make.centerX.equalToSuperview()
             make.bottom.equalTo(view.snp.bottom).offset(-44 * Constraint.yCoeff)
             make.height.equalTo(60 * Constraint.yCoeff)
             make.width.equalTo(182 * Constraint.xCoeff)
         }
-
-//        scannerManualView.snp.remakeConstraints { make in
-//            make.edges.equalToSuperview()
-//        }
     }
 
-//    private func hideScannerView() {
-//        scannerManualView.isHidden = true
-//    }
-//
     @objc private func pressManualButton() {
         let ScannerManualVC = ScannerManualController()
         navigationController?.pushViewController(ScannerManualVC, animated: true)

@@ -175,8 +175,8 @@ extension ExercisesController: UICollectionViewDelegate, UICollectionViewDataSou
 
         let selected = exerciseOptions[indexPath.item]
         let vc = WorkoutsHistoryController()
-        vc.selectedWorkoutTitle = selected.workoutName
-        vc.selectedWorkoutIconName = selected.workoutIconName
+        vc.selectedWorkout = selected // Pass full model
         navigationController?.pushViewController(vc, animated: true)
     }
+
 }

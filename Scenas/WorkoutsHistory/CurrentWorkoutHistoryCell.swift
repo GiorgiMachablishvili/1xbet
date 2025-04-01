@@ -21,7 +21,6 @@ class CurrentWorkoutHistoryCell: UICollectionViewCell {
     private lazy var iconImageView: UIImageView = {
         let view = UIImageView()
         view.contentMode = .scaleAspectFit
-        view.image = UIImage(named: "swimming")
         return view
     }()
 
@@ -29,7 +28,6 @@ class CurrentWorkoutHistoryCell: UICollectionViewCell {
         let view = UILabel()
         view.textColor = .whiteColor
         view.font = UIFont.funnelDesplayMedium(size: 14)
-        view.text = "Swimming"
         return view
     }()
 

@@ -165,6 +165,9 @@ extension WorkoutsHistoryController: UICollectionViewDelegate, UICollectionViewD
                 for: indexPath) as? TopCell else {
                 return UICollectionViewCell()
             }
+
+            cell.workoutTitle.text = selectedWorkout?.workoutName ?? "Workout"
+
             cell.didPressBackButton = { [weak self] in
                 self?.goBackPage()
             }
@@ -178,6 +181,9 @@ extension WorkoutsHistoryController: UICollectionViewDelegate, UICollectionViewD
                 withReuseIdentifier: String(describing: CurrentWorkoutHistoryCell.self),
                 for: indexPath) as? CurrentWorkoutHistoryCell else {
                 return UICollectionViewCell()
+            }
+            if let selectedWorkout = selectedWorkout {
+                cell.configure(with: selectedWorkout)
             }
             return cell
 
