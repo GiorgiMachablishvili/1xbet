@@ -3,9 +3,13 @@
 import UIKit
 import SnapKit
 
-class WorkoutHistoryHeaderView: UICollectionReusableView {
+class CurrentWorkoutHistoryHeaderView: UICollectionReusableView {
 
     var didTapPlusButton: (() -> Void)?
+
+    static let reuseIdentifier = "CurrentWorkoutHistoryHeaderView"
+
+    private let cellView = CurrentWorkoutHistoryCell()
 
     private lazy var titleLabel: UILabel = {
         let view = UILabel()
@@ -44,12 +48,17 @@ class WorkoutHistoryHeaderView: UICollectionReusableView {
     }
 
     private func setup() {
+        addSubview(cellView)
+        cellView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
         addSubview(titleLabel)
         addSubview(subtitleLabel)
         addSubview(plusButton)
     }
 
     private func setupConstraints() {
+
         titleLabel.snp.makeConstraints { make in
             make.top.equalToSuperview()
             make.leading.equalTo(snp.leading).offset(10 * Constraint.xCoeff)
@@ -71,4 +80,8 @@ class WorkoutHistoryHeaderView: UICollectionReusableView {
     @objc func pressPlusButton() {
         didTapPlusButton?()
     }
-} 
+
+    func configure(with model: ExerciseStatModel) {
+        cellView.configure(with: model)
+    }
+}

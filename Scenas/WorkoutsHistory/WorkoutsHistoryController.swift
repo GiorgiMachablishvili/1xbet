@@ -3,16 +3,12 @@
 import UIKit
 import SnapKit
 
-class ExercisesController: UIViewController {
+class WorkoutsHistoryController: UIViewController {
 
-    private var exerciseOptions: [ExerciseStatModel] = [
-        .init(workoutName: "Treadmill", workoutIconName: "treadmill", distance: "658.83", activityCount: "14"),
-        .init(workoutName: "Swimming", workoutIconName: "swimming", distance: "658.83", activityCount: "14"),
-        .init(workoutName: "Exercise bike", workoutIconName: "bike", distance: "658.83", activityCount: "14"),
-        .init(workoutName: "Running outside", workoutIconName: "run", distance: "658.83", activityCount: "14"),
-        .init(workoutName: "Ski walking", workoutIconName: "ski", distance: "658.83", activityCount: "14"),
-        .init(workoutName: "Walking", workoutIconName: "walk", distance: "658.83", activityCount: "14")
-    ]
+    var selectedWorkout: ExerciseStatModel?
+
+    var selectedWorkoutTitle: String?
+    var selectedWorkoutIconName: String?
 
     private lazy var collectionView: UICollectionView = {
         let view = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
@@ -45,23 +41,31 @@ class ExercisesController: UIViewController {
     }
 
     func setupHierarchy() {
-        collectionView.register(AddExercisesTopCell.self, forCellWithReuseIdentifier: String(describing: AddExercisesTopCell.self))
-        collectionView.register(ExercisesHistoryCell.self, forCellWithReuseIdentifier: String(describing: ExercisesHistoryCell.self))
+        collectionView.register(TopCell.self, forCellWithReuseIdentifier: String(describing: TopCell.self))
+        collectionView.register(CurrentWorkoutHistoryCell.self, forCellWithReuseIdentifier: String(describing: CurrentWorkoutHistoryCell.self))
+    }
 
+    private func navigateToScannerManual() {
+        let scannerManualVC = ScannerManualController()
+        navigationController?.pushViewController(scannerManualVC, animated: true)
+    }
+
+    private func goBackPage() {
+        navigationController?.popViewController(animated: true)
     }
 
 }
 
 //MARK: ProfileView configure layout
-extension ExercisesController {
+extension WorkoutsHistoryController {
     func configureCompositionLayout() {
         let layout = UICollectionViewCompositionalLayout { [weak self] sectionIndex, _ in
 
             switch sectionIndex {
             case 0:
-                return self?.addExercisesTopViewLayout()
+                return self?.topViewLayout()
             case 1:
-                return self?.exercisesHistoryViewLayout()
+                return self?.exerciseStatisticsViewLayout()
             default:
                 return self?.defaultLayout()
             }
@@ -69,15 +73,15 @@ extension ExercisesController {
         self.collectionView.setCollectionViewLayout(layout, animated: false)
     }
 
-    func addExercisesTopViewLayout() -> NSCollectionLayoutSection {
+    func topViewLayout() -> NSCollectionLayoutSection {
         let itemSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1.0),
-            heightDimension: .absolute(310 * Constraint.yCoeff))
+            heightDimension: .absolute(155 * Constraint.yCoeff))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
 
         let groupSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1.0),
-            heightDimension: .absolute(310 * Constraint.yCoeff)
+            heightDimension: .absolute(155 * Constraint.yCoeff)
         )
         let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
 
@@ -91,16 +95,16 @@ extension ExercisesController {
         return section
     }
 
-    func exercisesHistoryViewLayout() -> NSCollectionLayoutSection {
+    func exerciseStatisticsViewLayout() -> NSCollectionLayoutSection {
         let itemSize = NSCollectionLayoutSize(
-            widthDimension: .fractionalWidth(0.5),
-            heightDimension: .absolute(120 * Constraint.yCoeff)
+            widthDimension: .fractionalWidth(1.0),
+            heightDimension: .absolute(76 * Constraint.yCoeff)
         )
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
 
         let groupSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1.0),
-            heightDimension: .estimated(250 * Constraint.yCoeff)
+            heightDimension: .estimated(76 * Constraint.yCoeff)
         )
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
         group.interItemSpacing = .fixed(12)
@@ -136,7 +140,8 @@ extension ExercisesController {
     }
 }
 
-extension ExercisesController: UICollectionViewDelegate, UICollectionViewDataSource {
+
+extension WorkoutsHistoryController: UICollectionViewDelegate, UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 2
     }
@@ -146,7 +151,7 @@ extension ExercisesController: UICollectionViewDelegate, UICollectionViewDataSou
         case 0:
             return 1
         case 1:
-            return exerciseOptions.count
+            return 3
         default:
             return 0
         }
@@ -155,28 +160,29 @@ extension ExercisesController: UICollectionViewDelegate, UICollectionViewDataSou
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         switch indexPath.section {
         case 0:
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: AddExercisesTopCell.self), for: indexPath) as? AddExercisesTopCell else {
+            guard let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: String(describing: TopCell.self),
+                for: indexPath) as? TopCell else {
                 return UICollectionViewCell()
+            }
+            cell.didPressBackButton = { [weak self] in
+                self?.goBackPage()
+            }
+
+            cell.didTapPlusButton = { [weak self] in
+                self?.navigateToScannerManual()
             }
             return cell
         case 1:
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: ExercisesHistoryCell.self), for: indexPath) as? ExercisesHistoryCell else {
+            guard let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: String(describing: CurrentWorkoutHistoryCell.self),
+                for: indexPath) as? CurrentWorkoutHistoryCell else {
                 return UICollectionViewCell()
             }
-            cell.configure(with: exerciseOptions[indexPath.item])
             return cell
+
         default:
             return UICollectionViewCell()
         }
-    }
-
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard indexPath.section == 1 else { return }
-
-        let selected = exerciseOptions[indexPath.item]
-        let vc = WorkoutsHistoryController()
-        vc.selectedWorkoutTitle = selected.workoutName
-        vc.selectedWorkoutIconName = selected.workoutIconName
-        navigationController?.pushViewController(vc, animated: true)
     }
 }
