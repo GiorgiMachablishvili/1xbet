@@ -6,6 +6,8 @@ import SnapKit
 
 class NoPracticeView: UIView {
 
+    var didPressAddTrainingButton: (() -> Void)?
+
     private lazy var noPracticeViewBackground: UIView = {
         let view = UIView(frame: .zero)
         view.backgroundColor = .grayColorBackgroundColor
@@ -38,6 +40,7 @@ class NoPracticeView: UIView {
         view.titleLabel?.font = UIFont.funnelDesplayMedium(size: 11)
         view.makeRoundCorners(12)
         view.backgroundColor = .blueColor
+        view.addTarget(self, action: #selector(pressAddTrainingButton), for: .touchUpInside)
         return view
     }()
 
@@ -82,5 +85,10 @@ class NoPracticeView: UIView {
             make.height.equalTo(32 * Constraint.yCoeff)
             make.width.equalTo(129 * Constraint.xCoeff)
         }
+    }
+
+    @objc private func pressAddTrainingButton() {
+        print("did press add trining button")
+        didPressAddTrainingButton?()
     }
 }
