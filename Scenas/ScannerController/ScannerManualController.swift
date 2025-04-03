@@ -285,6 +285,27 @@ class ScannerManualController: UIViewController {
         }
     }
 
+    func setScannedTimeAndDistance(hours: Int, minutes: Int, seconds: Int, distance: Double) {
+        let hourTens = hours / 10
+        let hourOnes = hours % 10
+        let minTens = minutes / 10
+        let minOnes = minutes % 10
+        let secTens = seconds / 10
+        let secOnes = seconds % 10
+
+        hourFields[0].text = "\(hourTens)"
+        hourFields[1].text = "\(hourOnes)"
+        minuteFields[0].text = "\(minTens)"
+        minuteFields[1].text = "\(minOnes)"
+        secondFields[0].text = "\(secTens)"
+        secondFields[1].text = "\(secOnes)"
+
+        workoutDistanceTextField.text = "\(distance)"
+
+        calculateAndDisplaySpeed()
+    }
+
+
     private func makeUnitLabel(_ text: String) -> UILabel {
         let label = UILabel()
         label.text = text
