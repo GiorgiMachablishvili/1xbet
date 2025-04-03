@@ -72,10 +72,6 @@ class WorkoutHistoryHeaderView: UICollectionReusableView {
         didTapPlusButton?()
     }
 
-    override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
-        return plusButton.frame.contains(point) || titleLabel.frame.contains(point) || subtitleLabel.frame.contains(point)
-    }
-
     func configure(with count: Int) {
         subtitleLabel.text = "\(count) ACTIVITY"
     }
