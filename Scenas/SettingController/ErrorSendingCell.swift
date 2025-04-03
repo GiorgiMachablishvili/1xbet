@@ -36,7 +36,7 @@ class ErrorSendingCell: UICollectionViewCell {
         view.contentMode = .scaleAspectFit
         view.titleLabel?.font = UIFont.funnelDesplayMedium(size: 16)
         view.backgroundColor = .blueColor
-        view.makeRoundCorners(30)
+        view.makeRoundCorners(16)
         view.addTarget(self, action: #selector(pressSendButton), for: .touchUpInside)
         return view
     }()
@@ -79,7 +79,7 @@ class ErrorSendingCell: UICollectionViewCell {
         sendButton.snp.remakeConstraints { make in
             make.top.equalTo(errorTextFiled.snp.bottom).offset(30 * Constraint.yCoeff)
             make.centerX.equalTo(errorBackgroundView)
-            make.height.equalTo(60 * Constraint.yCoeff)
+            make.height.equalTo(44 * Constraint.yCoeff)
             make.width.equalTo(182 * Constraint.yCoeff)
         }
     }

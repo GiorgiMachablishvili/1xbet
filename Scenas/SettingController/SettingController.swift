@@ -254,10 +254,19 @@ extension SettingController: UICollectionViewDelegate, UICollectionViewDataSourc
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+
+
         switch indexPath.section {
         case 1:
-            selectedIndex = indexPath.item
-            collectionView.reloadSections(IndexSet(integer: 1))
+//            selectedIndex = indexPath.item
+//            collectionView.reloadSections(IndexSet(integer: 1))
+
+            guard indexPath.section == 1 else { return }
+            
+            let selected = exerciseOptions[indexPath.item]
+            let vc = WorkoutsHistoryController()
+            vc.selectedWorkout = selected // Pass full model
+            navigationController?.pushViewController(vc, animated: true)
 
         case 2:
             let selectedSupportItem = supportButtons[indexPath.item]

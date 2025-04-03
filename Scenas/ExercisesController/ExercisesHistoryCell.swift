@@ -3,9 +3,7 @@
 import UIKit
 import SnapKit
 
-class ExerciseStatisticsCell: UICollectionViewCell {
-    static let identifier = "ExerciseOptionCell"
-
+class ExercisesHistoryCell: UICollectionViewCell {
     private lazy var containerView: UIView = {
         let view = UIView()
         view.layer.cornerRadius = 24
@@ -99,15 +97,11 @@ class ExerciseStatisticsCell: UICollectionViewCell {
         }
     }
 
-    func configure(with data: ExerciseStatModel, selected: Bool) {
+    func configure(with data: ExerciseStatModel) {
         titleLabel.text = data.workoutName
         distanceLabel.text = "\(data.distance)km"
         activityLabel.text = "\(data.activityCount) Activity"
 
         iconImageView.image = UIImage(named: data.workoutIconName)?.withRenderingMode(.alwaysTemplate)
-
-//        containerView.backgroundColor = selected ? .blueColor : .blackTextColor
-//        iconImageView.tintColor = selected ? .blueColor : .whiteColor
     }
-
 }

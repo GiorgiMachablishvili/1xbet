@@ -5,6 +5,8 @@ import SnapKit
 
 class WorkoutHistoryHeaderView: UICollectionReusableView {
 
+    var didTapPlusButton: (() -> Void)?
+
     private lazy var titleLabel: UILabel = {
         let view = UILabel()
         view.text = "History"
@@ -50,7 +52,7 @@ class WorkoutHistoryHeaderView: UICollectionReusableView {
     private func setupConstraints() {
         titleLabel.snp.makeConstraints { make in
             make.top.equalToSuperview()
-            make.leading.equalTo(snp.leading).offset(10 * Constraint.xCoeff)
+            make.leading.equalTo(snp.leading).offset(16 * Constraint.xCoeff)
 
         }
 
@@ -61,12 +63,12 @@ class WorkoutHistoryHeaderView: UICollectionReusableView {
 
         plusButton.snp.remakeConstraints { make in
             make.centerY.equalToSuperview()
-            make.trailing.equalTo(snp.trailing).offset(-10 * Constraint.xCoeff)
+            make.trailing.equalTo(snp.trailing).offset(-16 * Constraint.xCoeff)
             make.height.width.equalTo(32 * Constraint.yCoeff)
         }
     }
 
     @objc func pressPlusButton() {
-        print("press plus button")
+        didTapPlusButton?()
     }
-}
+} 

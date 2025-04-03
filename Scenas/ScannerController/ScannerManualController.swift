@@ -30,6 +30,12 @@ class ScannerManualController: UIViewController {
         view.backgroundColor = .whiteColor
         view.makeRoundCorners(22)
         view.contentMode = .scaleAspectFit
+        view.addTarget(self, action: #selector(pressScanButton), for: .touchUpInside)
+        return view
+    }()
+
+    private lazy var chooseWorkoutView: ChooseWorkout = {
+        let view = ChooseWorkout()
         return view
     }()
 
@@ -151,6 +157,19 @@ class ScannerManualController: UIViewController {
         return view
     }()
 
+    private lazy var workoutsView: WorkoutsView = {
+        let view = WorkoutsView()
+        view.didPressCloseButton = { [weak self] in
+            self?.hideWorkoutView()
+        }
+        view.didSelectWorkout = { [weak self] selectedWorkout in
+            self?.chooseWorkoutView.setWorkout(data: selectedWorkout)
+            self?.hideWorkoutView()
+        }
+        view.isHidden = true
+        return view
+    }()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .mainViewsBackgroundYellow
@@ -159,11 +178,13 @@ class ScannerManualController: UIViewController {
         setupConstraint()
 
         updatePlaceHolder()
+        tabGestureChooseWorkout()
     }
 
     private func setup() {
         view.addSubview(backButton)
         view.addSubview(scanButton)
+        view.addSubview(chooseWorkoutView)
         view.addSubview(trainingDurationLabel)
         view.addSubview(timeStackView)
         view.addSubview(distanceSuspendedLabel)
@@ -173,6 +194,7 @@ class ScannerManualController: UIViewController {
         view.addSubview(kmOrMileLabel)
         view.addSubview(kmHourView)
         view.addSubview(saveButton)
+        view.addSubview(workoutsView)
     }
 
     private func setupConstraint() {
@@ -187,6 +209,12 @@ class ScannerManualController: UIViewController {
             make.trailing.equalTo(view.snp.trailing).offset(-10 * Constraint.xCoeff)
             make.height.equalTo(44 * Constraint.yCoeff)
             make.width.equalTo(84 * Constraint.xCoeff)
+        }
+
+        chooseWorkoutView.snp.remakeConstraints { make in
+            make.top.equalTo(backButton.snp.bottom).offset(24 * Constraint.yCoeff)
+            make.leading.trailing.equalToSuperview()
+            make.height.equalTo(76 * Constraint.yCoeff)
         }
 
         trainingDurationLabel.snp.remakeConstraints { make in
@@ -210,6 +238,12 @@ class ScannerManualController: UIViewController {
         distanceSuspendedLabel.snp.remakeConstraints { make in
             make.top.equalTo(timeStackView.snp.bottom).offset(47 * Constraint.yCoeff)
             make.leading.equalTo(view.snp.leading).offset(10 * Constraint.xCoeff)
+        }
+
+        workoutsView.snp.remakeConstraints { make in
+//            make.leading.bottom.trailing.equalToSuperview()
+//            make.height.equalTo(422 * Constraint.yCoeff)
+            make.edges.equalToSuperview()
         }
 
         kmButton.snp.remakeConstraints { make in
@@ -250,6 +284,27 @@ class ScannerManualController: UIViewController {
             make.height.equalTo(60 * Constraint.yCoeff)
         }
     }
+
+    func setScannedTimeAndDistance(hours: Int, minutes: Int, seconds: Int, distance: Double) {
+        let hourTens = hours / 10
+        let hourOnes = hours % 10
+        let minTens = minutes / 10
+        let minOnes = minutes % 10
+        let secTens = seconds / 10
+        let secOnes = seconds % 10
+
+        hourFields[0].text = "\(hourTens)"
+        hourFields[1].text = "\(hourOnes)"
+        minuteFields[0].text = "\(minTens)"
+        minuteFields[1].text = "\(minOnes)"
+        secondFields[0].text = "\(secTens)"
+        secondFields[1].text = "\(secOnes)"
+
+        workoutDistanceTextField.text = "\(distance)"
+
+        calculateAndDisplaySpeed()
+    }
+
 
     private func makeUnitLabel(_ text: String) -> UILabel {
         let label = UILabel()
@@ -326,8 +381,28 @@ class ScannerManualController: UIViewController {
         kmHourView.distanceLabel.text = String(format: "%.1f", speed)
     }
 
+    private func tabGestureChooseWorkout() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapChooseWorkout))
+        chooseWorkoutView.isUserInteractionEnabled = true
+        chooseWorkoutView.addGestureRecognizer(tapGesture)
+    }
+
+    @objc private func didTapChooseWorkout() {
+        workoutsView.isHidden = false
+        print("pressed tab gesture")
+    }
+
+    func hideWorkoutView() {
+        workoutsView.isHidden = true
+    }
+
     @objc private func handleInputChange() {
         calculateAndDisplaySpeed()
+    }
+
+    @objc private func pressScanButton() {
+        let scannerVC = ScannerController()
+        navigationController?.pushViewController(scannerVC, animated: true)
     }
 
     @objc private func pressSaveButton() {
@@ -335,3 +410,9 @@ class ScannerManualController: UIViewController {
     }
 }
 
+extension ChooseWorkout {
+    func setWorkout(data: ExerciseStatModel) {
+        iconImageView.image = UIImage(named: data.workoutIconName)?.withRenderingMode(.alwaysTemplate)
+        titleLabel.text = data.workoutName
+    }
+}
