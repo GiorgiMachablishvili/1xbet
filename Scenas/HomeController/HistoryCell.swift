@@ -28,6 +28,7 @@ class HistoryCell: UICollectionViewCell {
         let view = UIImageView()
         view.contentMode = .scaleAspectFit
         view.image = UIImage(named: "swimming")
+        view.tintColor = .whiteColor
         return view
     }()
 
@@ -137,5 +138,15 @@ class HistoryCell: UICollectionViewCell {
             make.leading.equalTo(workoutDateLabel.snp.trailing).offset(4 * Constraint.xCoeff)
             make.height.width.equalTo(16 * Constraint.yCoeff)
         }
+    }
+
+    func configure(with data: WorkoutHistory) {
+        iconImageView.image = UIImage(named: "\(data.workoutImage)")
+        titleLabel.text = data.workoutTitle
+        distanceLabel.text = data.workoutDistance
+        workoutDurationLabel.text = data.workoutDuration
+        workoutDateLabel.text = data.workoutData
+
+        iconImageView.image = UIImage(named: data.workoutImage)?.withRenderingMode(.alwaysTemplate)
     }
 }
