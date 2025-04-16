@@ -98,7 +98,8 @@ class Onboarding: UIViewController {
     }
 
     @objc private func clickSkipButton() {
-        print("pressed skip button")
+        let tabBarController = TabController() // Make sure TabController is correctly initialized
+        navigationController?.pushViewController(tabBarController, animated: true)
     }
 
     @objc private func clickNextButton() {

@@ -10,18 +10,27 @@ import Vision
 
 class ScannerController: UIViewController {
 
-//    private lazy var backButton: UIButton = {
-//        let view = UIButton(frame: .zero)
-//        view.setImage(UIImage(named: "backButton"), for: .normal)
-//        view.contentMode = .scaleAspectFit
-//        return view
-//    }()
+    private var photoOutput = AVCapturePhotoOutput()
+    private var hasScanned = false
+
+    private var scannedHours: Int?
+    private var scannedMinutes: Int?
+    private var scannedSeconds: Int?
+    private var scannedDistance: Double?
+    private var capturedImage: UIImage?
 
     private var captureSession: AVCaptureSession?
     private var previewLayer: AVCaptureVideoPreviewLayer?
     private var videoOutput = AVCaptureVideoDataOutput()
     private var visionRequest: VNRequest?
 
+
+    //    private lazy var backButton: UIButton = {
+    //        let view = UIButton(frame: .zero)
+    //        view.setImage(UIImage(named: "backButton"), for: .normal)
+    //        view.contentMode = .scaleAspectFit
+    //        return view
+    //    }()
 
     private lazy var manualInputButton: UIButton = {
         let view = UIButton(frame: .zero)
@@ -89,6 +98,18 @@ class ScannerController: UIViewController {
         return view
     }()
 
+    private lazy var scanAgainButton: UIButton = {
+        let view = UIButton(frame: .zero)
+        view.setTitle("Scan again", for: .normal)
+        view.setTitleColor(.whiteColor, for: .normal)
+        view.titleLabel?.font = UIFont.funnelDesplayMedium(size: 13)
+        view.backgroundColor = .blueColor
+        view.makeRoundCorners(26)
+        view.isHidden = true
+        view.addTarget(self, action: #selector(pressScanAgainButton), for: .touchUpInside)
+        return view
+    }()
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -99,23 +120,30 @@ class ScannerController: UIViewController {
 
     }
 
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        previewLayer?.frame = scannerPreviewImageView.bounds
+    }
+
+
     private func setup() {
-//        view.addSubview(backButton)
+        //        view.addSubview(backButton)
         view.addSubview(manualInputButton)
         view.addSubview(scannerPreviewImageView)
         view.addSubview(scannerImage)
         view.addSubview(currentDayLabel)
         view.addSubview(scanButton)
-//        view.addSubview(scannerManualView)
+        view.addSubview(scanAgainButton)
+        //        view.addSubview(scannerManualView)
     }
 
     private func setupConstraint() {
-//        backButton.snp.remakeConstraints { make in
-//            make.top.equalTo(view.snp.top).offset(60 * Constraint.yCoeff)
-//            make.leading.equalTo(view.snp.leading).offset(10 * Constraint.xCoeff)
-//            make.height.width.equalTo(44 * Constraint.yCoeff)
-//        }
-        
+        //        backButton.snp.remakeConstraints { make in
+        //            make.top.equalTo(view.snp.top).offset(60 * Constraint.yCoeff)
+        //            make.leading.equalTo(view.snp.leading).offset(10 * Constraint.xCoeff)
+        //            make.height.width.equalTo(44 * Constraint.yCoeff)
+        //        }
+
         manualInputButton.snp.remakeConstraints { make in
             make.top.equalTo(view.snp.top).offset(60 * Constraint.yCoeff)
             make.trailing.equalTo(view.snp.trailing).offset(-10 * Constraint.xCoeff)
@@ -135,17 +163,24 @@ class ScannerController: UIViewController {
             make.bottom.equalTo(scanButton.snp.top).offset(-110 * Constraint.yCoeff)
             make.height.width.equalTo(60 * Constraint.yCoeff)
         }
-        
+
         currentDayLabel.snp.remakeConstraints { make in
             make.top.equalTo(scannerImage.snp.bottom).offset(16 * Constraint.yCoeff)
             make.leading.trailing.equalTo(10 * Constraint.xCoeff)
         }
-        
+
         scanButton.snp.remakeConstraints { make in
             make.centerX.equalToSuperview()
             make.bottom.equalTo(view.snp.bottom).offset(-44 * Constraint.yCoeff)
             make.height.equalTo(60 * Constraint.yCoeff)
             make.width.equalTo(182 * Constraint.xCoeff)
+        }
+
+        scanAgainButton.snp.remakeConstraints { make in
+            make.top.equalTo(scanButton.snp.top)
+            make.leading.equalTo(scanButton.snp.trailing).offset(10 * Constraint.xCoeff)
+            make.trailing.equalTo(view.snp.trailing).offset(-10 * Constraint.xCoeff)
+            make.bottom.equalTo(scanButton.snp.bottom)
         }
     }
 
@@ -154,64 +189,133 @@ class ScannerController: UIViewController {
         navigationController?.pushViewController(ScannerManualVC, animated: true)
     }
 
-//    @objc private func pressScanButton() {
-//        // Mock scanned image
-//        scannerPreviewImageView.image = UIImage(named: "mockTreadmillDisplay")
-//        scannerPreviewImageView.isHidden = false
-//
-//        // Simulated scanned values (these would come from OCR in real app)
-//        let scannedHours = 1
-//        let scannedMinutes = 23
-//        let scannedSeconds = 45
-//        let scannedDistance = 5.6
-//
-//        let manualVC = ScannerManualController()
-//
-//        manualVC.setScannedTimeAndDistance(hours: scannedHours, minutes: scannedMinutes, seconds: scannedSeconds, distance: scannedDistance)
-//        navigationController?.pushViewController(manualVC, animated: true)
-//    }
-
     private func setupLiveCamera() {
         captureSession = AVCaptureSession()
-        captureSession?.sessionPreset = .high
 
-        guard let videoDevice = AVCaptureDevice.default(for: .video),
-              let videoInput = try? AVCaptureDeviceInput(device: videoDevice),
-              captureSession?.canAddInput(videoInput) == true else {
-            print("Cannot access camera")
+        guard let videoDevice = AVCaptureDevice.default(for: .video) else {
+            print("⚠️ No camera device found")
             return
         }
 
-        captureSession?.addInput(videoInput)
-
-        // Add output
-        videoOutput.setSampleBufferDelegate(self, queue: DispatchQueue(label: "videoQueue"))
-        captureSession?.addOutput(videoOutput)
-
-        // Set up preview
-        previewLayer = AVCaptureVideoPreviewLayer(session: captureSession!)
-        previewLayer?.videoGravity = .resizeAspectFill
-        previewLayer?.frame = CGRect(x: 0, y: 160, width: view.bounds.width, height: 400) // adjust as needed
-        if let layer = previewLayer {
-            view.layer.insertSublayer(layer, at: 0) // behind everything
+        do {
+            let videoInput = try AVCaptureDeviceInput(device: videoDevice)
+            if captureSession?.canAddInput(videoInput) == true {
+                captureSession?.addInput(videoInput)
+            }
+        } catch {
+            print("❌ Error setting up camera input: \(error)")
+            return
         }
 
-        captureSession?.startRunning()
+        // ✅ Add video output for live OCR
+        if captureSession?.canAddOutput(videoOutput) == true {
+            videoOutput.setSampleBufferDelegate(self, queue: DispatchQueue(label: "videoQueue"))
+            captureSession?.addOutput(videoOutput)
+        }
+
+        // ✅ Add photo output for snapshot on "Scan"
+        if captureSession?.canAddOutput(photoOutput) == true {
+            captureSession?.addOutput(photoOutput)
+        }
+
+        // ✅ Configure preview layer to show camera feed
+        previewLayer = AVCaptureVideoPreviewLayer(session: captureSession!)
+        previewLayer?.videoGravity = .resizeAspectFill
+
+        DispatchQueue.main.async {
+            self.previewLayer?.frame = self.scannerPreviewImageView.bounds
+            self.scannerPreviewImageView.layer.insertSublayer(self.previewLayer!, at: 0)
+            self.scannerPreviewImageView.isHidden = false
+        }
+
+        // ✅ Start session on background thread
+        DispatchQueue.global(qos: .userInitiated).async {
+            self.captureSession?.startRunning()
+        }
     }
 
-
-    private var hasScanned = false
 
     @objc private func pressScanButton() {
-        hasScanned = false // reset scanning state when user taps "Scan"
-        print("Live camera scan started")
+        if scanButton.title(for: .normal) == "Go next" {
+            guard let image = capturedImage else {
+                print("⚠️ No captured image available.")
+                return
+            }
+            // Re-run OCR and handle result in callback
+            extractDataFromImage(image)
+
+        } else {
+            let settings = AVCapturePhotoSettings()
+            settings.flashMode = .off
+            photoOutput.capturePhoto(with: settings, delegate: self)
+            scanAgainButton.isHidden = false
+        }
     }
 
+    private func extractDataFromImage(_ image: UIImage) {
+        guard let cgImage = image.cgImage else { return }
 
-//    @objc private func pressScanButton() {
-//        presentImagePicker() // simulate picking treadmill screen
-//    }
+        let requestHandler = VNImageRequestHandler(cgImage: cgImage, options: [:])
+        let request = VNRecognizeTextRequest { [weak self] request, error in
+            guard let self = self else { return }
+            guard error == nil else {
+                print("❌ OCR Error: \(error!)")
+                return
+            }
 
+            let texts = (request.results as? [VNRecognizedTextObservation])?
+                .compactMap { $0.topCandidates(1).first?.string } ?? []
+
+            print("📸 OCR Extracted Texts:\n\(texts.joined(separator: ", "))")
+
+            // Find time and distance from OCR
+            let timeText = texts.first(where: { $0.contains(":") })
+            let distanceText = texts.first(where: { $0.contains(".") && Double($0) != nil })
+
+            // Fallback values
+            var hours = 0, minutes = 0, seconds = 0
+            let distance = Double(distanceText ?? "0") ?? 0.0
+
+            if let time = timeText {
+                let timeParts = time.split(separator: ":").compactMap { Int($0) }
+                if timeParts.count == 3 {
+                    hours = timeParts[0]
+                    minutes = timeParts[1]
+                    seconds = timeParts[2]
+                } else if timeParts.count == 2 {
+                    minutes = timeParts[0]
+                    seconds = timeParts[1]
+                }
+            }
+
+            DispatchQueue.main.async {
+                print("✅ FINAL RESULT:")
+                print("Time → h:\(hours), m:\(minutes), s:\(seconds)")
+                print("Distance → \(distance)")
+
+                self.scannedHours = hours
+                self.scannedMinutes = minutes
+                self.scannedSeconds = seconds
+                self.scannedDistance = distance
+
+                let manualVC = ScannerManualController()
+                manualVC.setScannedTimeAndDistance(
+                    hours: hours,
+                    minutes: minutes,
+                    seconds: seconds,
+                    distance: distance
+                )
+                self.navigationController?.pushViewController(manualVC, animated: true)
+            }
+        }
+
+        request.recognitionLevel = .accurate
+        request.usesLanguageCorrection = false
+
+        DispatchQueue.global(qos: .userInitiated).async {
+            try? requestHandler.perform([request])
+        }
+    }
 
     private func presentImagePicker() {
         let picker = UIImagePickerController()
@@ -220,7 +324,36 @@ class ScannerController: UIViewController {
         present(picker, animated: true, completion: nil)
     }
 
+    @objc private func pressScanAgainButton() {
+        // Clear previous scan data
+        scannedHours = nil
+        scannedMinutes = nil
+        scannedSeconds = nil
+        scannedDistance = nil
+        capturedImage = nil
+        hasScanned = false
 
+        // Clear the UI
+        scannerPreviewImageView.image = nil
+        scannerPreviewImageView.isHidden = true
+        scanAgainButton.isHidden = true
+        scanButton.setTitle("Scan", for: .normal)
+
+        // Restart camera preview
+        if let session = captureSession, !session.isRunning {
+            DispatchQueue.global(qos: .userInitiated).async {
+                session.startRunning()
+            }
+
+            DispatchQueue.main.async {
+                if let previewLayer = self.previewLayer {
+                    self.scannerPreviewImageView.layer.insertSublayer(previewLayer, at: 0)
+                    previewLayer.frame = self.scannerPreviewImageView.bounds
+                    self.scannerPreviewImageView.isHidden = false
+                }
+            }
+        }
+    }
 }
 
 
@@ -248,14 +381,17 @@ extension ScannerController: UIImagePickerControllerDelegate, UINavigationContro
             }
 
             if let results = request.results as? [VNRecognizedTextObservation] {
-                var detectedText = ""
+                var allText = ""
                 for observation in results {
                     guard let candidate = observation.topCandidates(1).first else { continue }
-                    detectedText += candidate.string + "\n"
+                    allText += candidate.string + "\n"
                 }
 
-                print("Detected text:\n\(detectedText)")
-                self.parseScannedText(detectedText)
+                print("🔍 Extracted OCR Text:\n\(allText)")
+
+                // Extract only time and distance patterns
+                let matches = self.extractRelevantNumbers(from: allText)
+                print("🧾 Filtered Numbers with ':' or '.':\n\(matches)")
             }
         }
 
@@ -267,8 +403,15 @@ extension ScannerController: UIImagePickerControllerDelegate, UINavigationContro
         }
     }
 
+    private func extractRelevantNumbers(from text: String) -> [String] {
+        let pattern = #"(\d+:\d+|\d+\.\d+)"# // Matches "30:42" and "11.48"
+        let regex = try? NSRegularExpression(pattern: pattern)
+        let nsString = text as NSString
+        let matches = regex?.matches(in: text, range: NSRange(text.startIndex..., in: text)) ?? []
+        return matches.map { nsString.substring(with: $0.range) }
+    }
+
     private func parseScannedText(_ text: String) {
-        // ✅ Prevent multiple pushes
         guard !hasScanned else { return }
 
         let timePattern = #"(\d{1,2}):(\d{2}):(\d{2})"#
@@ -294,53 +437,50 @@ extension ScannerController: UIImagePickerControllerDelegate, UINavigationContro
             }
         }
 
-        // Make sure some value was detected
         guard hours > 0 || minutes > 0 || seconds > 0 || distance > 0 else { return }
 
-        hasScanned = true // ✅ prevent future scans
+        hasScanned = true
 
         DispatchQueue.main.async {
-            let manualVC = ScannerManualController()
-            manualVC.setScannedTimeAndDistance(hours: hours, minutes: minutes, seconds: seconds, distance: distance)
-            self.navigationController?.pushViewController(manualVC, animated: true)
+            self.scannedHours = hours
+            self.scannedMinutes = minutes
+            self.scannedSeconds = seconds
+            self.scannedDistance = distance
+
+            print("✅ Detected:")
+            print("Hours: \(hours)")
+            print("Minutes: \(minutes)")
+            print("Seconds: \(seconds)")
+            print("Distance: \(distance)")
+
+            self.scanButton.setTitle("Go next", for: .normal)
         }
     }
+}
 
+extension ScannerController: AVCapturePhotoCaptureDelegate {
+    func photoOutput(_ output: AVCapturePhotoOutput,
+                     didFinishProcessingPhoto photo: AVCapturePhoto,
+                     error: Error?) {
 
-//    private func parseScannedText(_ text: String) {
-//        // Example text: "01:23:45 Distance: 5.6"
-//
-//        var hasScanned = false
-//
-//        let timePattern = #"(\d{1,2}):(\d{2}):(\d{2})"#
-//        let distancePattern = #"(Distance|Dist):\s*([\d.]+)"#
-//
-//        var hours = 0, minutes = 0, seconds = 0
-//        var distance: Double = 0.0
-//
-//        if let timeMatch = text.range(of: timePattern, options: .regularExpression) {
-//            let timeString = String(text[timeMatch])
-//            let parts = timeString.split(separator: ":").compactMap { Int($0) }
-//            if parts.count == 3 {
-//                hours = parts[0]
-//                minutes = parts[1]
-//                seconds = parts[2]
-//            }
-//        }
-//
-//        if let distanceMatch = text.range(of: distancePattern, options: .regularExpression) {
-//            let matchText = String(text[distanceMatch])
-//            if let value = Double(matchText.components(separatedBy: CharacterSet(charactersIn: ": ")).last ?? "") {
-//                distance = value
-//            }
-//        }
-//
-//        DispatchQueue.main.async {
-//            let manualVC = ScannerManualController()
-//            manualVC.setScannedTimeAndDistance(hours: hours, minutes: minutes, seconds: seconds, distance: distance)
-//            self.navigationController?.pushViewController(manualVC, animated: true)
-//        }
-//    }
+        guard let imageData = photo.fileDataRepresentation(),
+              let image = UIImage(data: imageData) else {
+            print("❌ Failed to get image from photo capture")
+            return
+        }
+
+        // ✅ Hide live preview and show snapshot
+        DispatchQueue.main.async {
+            self.previewLayer?.removeFromSuperlayer()
+            self.scannerPreviewImageView.image = image
+            self.scannerPreviewImageView.isHidden = false
+            self.captureSession?.stopRunning() // optional: freeze session
+            self.scanButton.setTitle("Go next", for: .normal)
+            self.capturedImage = image
+            // 🔍 Perform OCR on captured image
+            self.performOCR(on: image)
+        }
+    }
 }
 
 
@@ -356,7 +496,7 @@ extension ScannerController: AVCaptureVideoDataOutputSampleBufferDelegate {
             let combinedText = texts.joined(separator: "\n")
 
             DispatchQueue.main.async {
-                print("Live OCR Output:\n\(combinedText)")
+                //                print("Live OCR Output:\n\(combinedText)")
                 self.parseScannedText(combinedText) // your function to extract hour/min/sec/distance
             }
         }

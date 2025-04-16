@@ -305,7 +305,6 @@ class ScannerManualController: UIViewController {
         calculateAndDisplaySpeed()
     }
 
-
     private func makeUnitLabel(_ text: String) -> UILabel {
         let label = UILabel()
         label.text = text
