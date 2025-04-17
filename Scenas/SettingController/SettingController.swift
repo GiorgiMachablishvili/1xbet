@@ -2,6 +2,7 @@
 
 import UIKit
 import SnapKit
+import StoreKit
 
 class SettingController: UIViewController {
 
@@ -254,8 +255,6 @@ extension SettingController: UICollectionViewDelegate, UICollectionViewDataSourc
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-
-
         switch indexPath.section {
         case 1:
 //            selectedIndex = indexPath.item
@@ -280,9 +279,9 @@ extension SettingController: UICollectionViewDelegate, UICollectionViewDataSourc
                 print("pressed Support button")
             }
             if selectedSupportItem.name == "Rate US" {
-                print("pressed Rate button")
+                guard let scene = view.window?.windowScene else { return }
+                SKStoreReviewController.requestReview(in: scene)
             }
-
         default:
             break
         }

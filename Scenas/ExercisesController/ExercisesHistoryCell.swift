@@ -101,7 +101,6 @@ class ExercisesHistoryCell: UICollectionViewCell {
         titleLabel.text = data.workoutName
         distanceLabel.text = "\(data.distance)km"
         activityLabel.text = "\(data.activityCount) Activity"
-
         iconImageView.image = UIImage(named: data.workoutIconName)?.withRenderingMode(.alwaysTemplate)
     }
 }

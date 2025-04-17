@@ -5,14 +5,7 @@ import SnapKit
 
 class ExercisesController: UIViewController {
 
-    private var exerciseOptions: [ExerciseStatModel] = [
-        .init(workoutName: "Treadmill", workoutIconName: "treadmill", distance: "658.83", activityCount: "14"),
-        .init(workoutName: "Swimming", workoutIconName: "swimming", distance: "658.83", activityCount: "14"),
-        .init(workoutName: "Exercise bike", workoutIconName: "bike", distance: "658.83", activityCount: "14"),
-        .init(workoutName: "Running outside", workoutIconName: "run", distance: "658.83", activityCount: "14"),
-        .init(workoutName: "Ski walking", workoutIconName: "ski", distance: "658.83", activityCount: "14"),
-        .init(workoutName: "Walking", workoutIconName: "walk", distance: "658.83", activityCount: "14")
-    ]
+    private let viewModel = ExercisesViewModel()
 
     private lazy var collectionView: UICollectionView = {
         let view = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
@@ -29,7 +22,6 @@ class ExercisesController: UIViewController {
 
         setup()
         setupConstraint()
-
         setupHierarchy()
         configureCompositionLayout()
     }
@@ -49,7 +41,6 @@ class ExercisesController: UIViewController {
         collectionView.register(ExercisesHistoryCell.self, forCellWithReuseIdentifier: String(describing: ExercisesHistoryCell.self))
 
     }
-
 }
 
 //MARK: ProfileView configure layout
@@ -146,7 +137,7 @@ extension ExercisesController: UICollectionViewDelegate, UICollectionViewDataSou
         case 0:
             return 1
         case 1:
-            return exerciseOptions.count
+            return viewModel.exerciseOptions.count
         default:
             return 0
         }
@@ -163,7 +154,7 @@ extension ExercisesController: UICollectionViewDelegate, UICollectionViewDataSou
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: ExercisesHistoryCell.self), for: indexPath) as? ExercisesHistoryCell else {
                 return UICollectionViewCell()
             }
-            cell.configure(with: exerciseOptions[indexPath.item])
+            cell.configure(with: viewModel.exerciseOptions[indexPath.item])
             return cell
         default:
             return UICollectionViewCell()
@@ -172,11 +163,9 @@ extension ExercisesController: UICollectionViewDelegate, UICollectionViewDataSou
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard indexPath.section == 1 else { return }
-
-        let selected = exerciseOptions[indexPath.item]
+        let selected = viewModel.exerciseOptions[indexPath.item]
         let vc = WorkoutsHistoryController()
-        vc.selectedWorkout = selected // Pass full model
+        vc.selectedWorkout = selected
         navigationController?.pushViewController(vc, animated: true)
     }
-
 }

@@ -115,7 +115,6 @@ class ScannerController: UIViewController {
 
         setup()
         setupConstraint()
-
         setupLiveCamera()
 
     }
@@ -134,7 +133,6 @@ class ScannerController: UIViewController {
         view.addSubview(currentDayLabel)
         view.addSubview(scanButton)
         view.addSubview(scanAgainButton)
-        //        view.addSubview(scannerManualView)
     }
 
     private func setupConstraint() {
@@ -191,12 +189,10 @@ class ScannerController: UIViewController {
 
     private func setupLiveCamera() {
         captureSession = AVCaptureSession()
-
         guard let videoDevice = AVCaptureDevice.default(for: .video) else {
             print("⚠️ No camera device found")
             return
         }
-
         do {
             let videoInput = try AVCaptureDeviceInput(device: videoDevice)
             if captureSession?.canAddInput(videoInput) == true {
@@ -206,7 +202,6 @@ class ScannerController: UIViewController {
             print("❌ Error setting up camera input: \(error)")
             return
         }
-
         // ✅ Add video output for live OCR
         if captureSession?.canAddOutput(videoOutput) == true {
             videoOutput.setSampleBufferDelegate(self, queue: DispatchQueue(label: "videoQueue"))
@@ -233,7 +228,6 @@ class ScannerController: UIViewController {
             self.captureSession?.startRunning()
         }
     }
-
 
     @objc private func pressScanButton() {
         if scanButton.title(for: .normal) == "Go next" {

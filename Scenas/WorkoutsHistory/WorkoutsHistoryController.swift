@@ -6,6 +6,7 @@ import SnapKit
 class WorkoutsHistoryController: UIViewController {
 
     var selectedWorkout: ExerciseStatModel?
+    private let viewModel = WorkoutsHistoryViewModel()
 
     var selectedWorkoutTitle: String?
     var selectedWorkoutIconName: String?
@@ -25,9 +26,9 @@ class WorkoutsHistoryController: UIViewController {
 
         setup()
         setupConstraint()
-
         setupHierarchy()
         configureCompositionLayout()
+        bindViewModel()
     }
 
     func setup() {
@@ -45,15 +46,25 @@ class WorkoutsHistoryController: UIViewController {
         collectionView.register(CurrentWorkoutHistoryCell.self, forCellWithReuseIdentifier: String(describing: CurrentWorkoutHistoryCell.self))
     }
 
-    private func navigateToScannerManual() {
-        let scannerManualVC = ScannerManualController()
-        navigationController?.pushViewController(scannerManualVC, animated: true)
+    private func bindViewModel() {
+        viewModel.onNavigateToScannerManual = { [weak self] in
+            let scannerManualVC = ScannerManualController()
+            self?.navigationController?.pushViewController(scannerManualVC, animated: true)
+        }
+
+        viewModel.onGoBack = { [weak self] in
+            self?.navigationController?.popViewController(animated: true)
+        }
     }
 
-    private func goBackPage() {
-        navigationController?.popViewController(animated: true)
-    }
-
+//    private func navigateToScannerManual() {
+//        let scannerManualVC = ScannerManualController()
+//        navigationController?.pushViewController(scannerManualVC, animated: true)
+//    }
+//
+//    private func goBackPage() {
+//        navigationController?.popViewController(animated: true)
+//    }
 }
 
 //MARK: ProfileView configure layout
@@ -169,11 +180,11 @@ extension WorkoutsHistoryController: UICollectionViewDelegate, UICollectionViewD
             cell.workoutTitle.text = selectedWorkout?.workoutName ?? "Workout"
 
             cell.didPressBackButton = { [weak self] in
-                self?.goBackPage()
+                self?.viewModel.handleBackButtonTap()
             }
 
             cell.didTapPlusButton = { [weak self] in
-                self?.navigateToScannerManual()
+                self?.viewModel.handlePlusButtonTap()
             }
             return cell
         case 1:
