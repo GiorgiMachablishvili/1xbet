@@ -142,7 +142,7 @@ extension SettingController {
             heightDimension: .absolute(200 * Constraint.yCoeff)
         )
         let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
-//        group.interItemSpacing = .fixed(12)
+        //        group.interItemSpacing = .fixed(12)
 
         let section = NSCollectionLayoutSection(group: group)
         section.contentInsets = .init(
@@ -257,11 +257,8 @@ extension SettingController: UICollectionViewDelegate, UICollectionViewDataSourc
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         switch indexPath.section {
         case 1:
-//            selectedIndex = indexPath.item
-//            collectionView.reloadSections(IndexSet(integer: 1))
-
             guard indexPath.section == 1 else { return }
-            
+
             let selected = exerciseOptions[indexPath.item]
             let vc = WorkoutsHistoryController()
             vc.selectedWorkout = selected // Pass full model
@@ -286,5 +283,4 @@ extension SettingController: UICollectionViewDelegate, UICollectionViewDataSourc
             break
         }
     }
-
 }

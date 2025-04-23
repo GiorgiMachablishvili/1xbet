@@ -1,9 +1,4 @@
-//
-//  HistoryCell.swift
-//  1xbet
-//
-//  Created by Gio's Mac on 31.03.25.
-//
+
 
 import UIKit
 import SnapKit

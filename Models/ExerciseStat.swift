@@ -1,9 +1,4 @@
-//
-//  ExerciseStat.swift
-//  1xbet
-//
-//  Created by Gio's Mac on 29.03.25.
-//
+
 
 import Foundation
 
