@@ -5,7 +5,7 @@ import UIKit
 class HomeViewModel {
 
     // MARK: - Properties
-    private (set) var workoutsHistory: [WorkoutHistory] = [
+    private(set) var workoutsHistory: [WorkoutHistory] = [
         .init(workoutTitle: "Treadmill", workoutImage: "treadmill", workoutDistance: "658.83", workoutDuration: "3m25s", workoutData: "12:08 pm"),
         .init(workoutTitle: "Swimming", workoutImage: "swimming", workoutDistance: "658.83", workoutDuration: "3m25s", workoutData: "12:08 pm"),
         .init(workoutTitle: "Swimming", workoutImage: "swimming", workoutDistance: "658.83", workoutDuration: "3m25s", workoutData: "12:08 pm"),
