@@ -387,7 +387,6 @@ class ScannerManualController: UIViewController {
         view.endEditing(true)
     }
 
-
     //TODO: add func
     @objc private func pressSaveButton() {
 
