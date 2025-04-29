@@ -6,6 +6,8 @@ import StoreKit
 
 class SettingController: UIViewController {
 
+    private let viewModel = SettingControllerViewModel()
+
     private var selectedIndex: Int = 0
 
     private lazy var collectionView: UICollectionView = {
@@ -17,22 +19,6 @@ class SettingController: UIViewController {
         view.backgroundColor = UIColor.mainViewsBackgroundYellow
         return view
     }()
-
-    private var exerciseOptions: [ExerciseStatModel] = [
-        .init(workoutName: "Treadmill", workoutIconName: "treadmill", distance: "658.83", activityCount: "14"),
-        .init(workoutName: "Swimming", workoutIconName: "swimming", distance: "658.83", activityCount: "14"),
-        .init(workoutName: "Exercise bike", workoutIconName: "bike", distance: "658.83", activityCount: "14"),
-        .init(workoutName: "Running outside", workoutIconName: "run", distance: "658.83", activityCount: "14"),
-        .init(workoutName: "Ski walking", workoutIconName: "ski", distance: "658.83", activityCount: "14"),
-        .init(workoutName: "Walking", workoutIconName: "walk", distance: "658.83", activityCount: "14")
-    ]
-
-    private var supportButtons: [SupportButtonStatModel] = [
-        .init(name: "Terms of Use", image: "plus"),
-        .init(name: "Privacy Policy", image: "plus"),
-        .init(name: "Support", image: "plus"),
-        .init(name: "Rate US", image: "plus")
-    ]
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -207,9 +193,9 @@ extension SettingController: UICollectionViewDelegate, UICollectionViewDataSourc
         case 0:
             return 1
         case 1:
-            return exerciseOptions.count
+            return viewModel.exerciseOptionsCount
         case 2:
-            return supportButtons.count
+            return viewModel.supportButtonsCount
         case 3:
             return 1
         default:
@@ -232,7 +218,7 @@ extension SettingController: UICollectionViewDelegate, UICollectionViewDataSourc
                 for: indexPath) as? ExerciseStatisticsCell else {
                 return UICollectionViewCell()
             }
-            cell.configure(with: exerciseOptions[indexPath.item], selected: indexPath.item == selectedIndex)
+            cell.configure(with: viewModel.exerciseOptions[indexPath.item], selected: indexPath.item == selectedIndex)
             return cell
         case 2:
             guard let cell = collectionView.dequeueReusableCell(
@@ -240,7 +226,7 @@ extension SettingController: UICollectionViewDelegate, UICollectionViewDataSourc
                 for: indexPath) as? SupportCell else {
                 return UICollectionViewCell()
             }
-            cell.configure(with: supportButtons[indexPath.item])
+            cell.configure(with: viewModel.supportButtons[indexPath.item])
             return cell
         case 3:
             guard let cell = collectionView.dequeueReusableCell(
@@ -259,13 +245,13 @@ extension SettingController: UICollectionViewDelegate, UICollectionViewDataSourc
         case 1:
             guard indexPath.section == 1 else { return }
 
-            let selected = exerciseOptions[indexPath.item]
+            let selected = viewModel.exerciseOptions[indexPath.item]
             let vc = WorkoutsHistoryController()
             vc.selectedWorkout = selected // Pass full model
             navigationController?.pushViewController(vc, animated: true)
 
         case 2:
-            let selectedSupportItem = supportButtons[indexPath.item]
+            let selectedSupportItem = viewModel.supportButtons[indexPath.item]
             if selectedSupportItem.name == "Terms of Use" {
                 print("pressed term button")
             }
