@@ -5,6 +5,7 @@ import SnapKit
 
 class ScannerManualController: UIViewController {
 
+    private let viewModel = ScannerManualViewModel()
     var hour: Double = 0.0
 
     private lazy var backButton: UIButton = {
@@ -319,53 +320,37 @@ class ScannerManualController: UIViewController {
     }
 
     @objc private func pressKmButton() {
+        viewModel.setUnit(.km)
         kmButton.backgroundColor = .blueColor
         milesButton.backgroundColor = .clear
-        kmOrMileLabel.text = "Km"
-        kmHourView.kmOrMilesHourLabel.text = "km/h"
+        kmOrMileLabel.text = viewModel.getUnitLabel()
+        kmHourView.kmOrMilesHourLabel.text = viewModel.getSpeedUnitLabel()
     }
 
     @objc private func pressMilesButton() {
+        viewModel.setUnit(.miles)
         kmButton.backgroundColor = .clear
         milesButton.backgroundColor = .blueColor
-        kmOrMileLabel.text = "Miles"
-        kmHourView.kmOrMilesHourLabel.text = "miles/h"
+        kmOrMileLabel.text = viewModel.getUnitLabel()
+        kmHourView.kmOrMilesHourLabel.text = viewModel.getSpeedUnitLabel()
     }
 
     private func calculateAndDisplaySpeed() {
-        let hourTens = Int(hourFields[0].text ?? "0") ?? 0
-        let hourOnes = Int(hourFields[1].text ?? "0") ?? 0
-        let hours = Double(hourTens * 10 + hourOnes)
+        let h1 = Int(hourFields[0].text ?? "0") ?? 0
+        let h2 = Int(hourFields[1].text ?? "0") ?? 0
+        let m1 = Int(minuteFields[0].text ?? "0") ?? 0
+        let m2 = Int(minuteFields[1].text ?? "0") ?? 0
+        let s1 = Int(secondFields[0].text ?? "0") ?? 0
+        let s2 = Int(secondFields[1].text ?? "0") ?? 0
 
-        let minTens = Int(minuteFields[0].text ?? "0") ?? 0
-        let minOnes = Int(minuteFields[1].text ?? "0") ?? 0
-        var minutes = Double(minTens * 10 + minOnes)
-        if minutes > 59 {
-            minutes = 59
-            minuteFields[0].text = "5"
-            minuteFields[1].text = "9"
-        }
+        let h = h1 * 10 + h2
+        let m = m1 * 10 + m2
+        let s = s1 * 10 + s2
+        let d = Double(workoutDistanceTextField.text ?? "0") ?? 0
 
-        let secTens = Int(secondFields[0].text ?? "0") ?? 0
-        let secOnes = Int(secondFields[1].text ?? "0") ?? 0
-        var seconds = Double(secTens * 10 + secOnes)
-        if seconds > 59 {
-            seconds = 59
-            secondFields[0].text = "5"
-            secondFields[1].text = "9"
-        }
-
-        let totalHours = hours + (minutes / 60) + (seconds / 3600)
-
-        let distance = Double(workoutDistanceTextField.text ?? "") ?? 0
-
-        guard totalHours > 0, distance > 0 else {
-            kmHourView.distanceLabel.text = "0"
-            return
-        }
-
-        let speed = distance / totalHours
-        kmHourView.distanceLabel.text = String(format: "%.1f", speed)
+        viewModel.updateTime(hours: h, minutes: m, seconds: s)
+        viewModel.updateDistance(d)
+        kmHourView.distanceLabel.text = viewModel.speedString
     }
 
     private func tabGestureChooseWorkout() {
@@ -392,10 +377,6 @@ class ScannerManualController: UIViewController {
         navigationController?.pushViewController(scannerVC, animated: true)
     }
 
-    @objc private func pressSaveButton() {
-
-    }
-
     private func setupKeyboardDismissGesture() {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         tapGesture.cancelsTouchesInView = false
@@ -406,6 +387,11 @@ class ScannerManualController: UIViewController {
         view.endEditing(true)
     }
 
+
+    //TODO: add func
+    @objc private func pressSaveButton() {
+
+    }
 }
 
 extension ChooseWorkout {
