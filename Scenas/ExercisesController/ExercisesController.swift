@@ -137,7 +137,7 @@ extension ExercisesController: UICollectionViewDelegate, UICollectionViewDataSou
         case 0:
             return 1
         case 1:
-            return viewModel.exerciseOptions.count
+            return viewModel.exerciseCount
         default:
             return 0
         }

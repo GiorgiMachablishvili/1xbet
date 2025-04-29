@@ -56,15 +56,6 @@ class WorkoutsHistoryController: UIViewController {
             self?.navigationController?.popViewController(animated: true)
         }
     }
-
-//    private func navigateToScannerManual() {
-//        let scannerManualVC = ScannerManualController()
-//        navigationController?.pushViewController(scannerManualVC, animated: true)
-//    }
-//
-//    private func goBackPage() {
-//        navigationController?.popViewController(animated: true)
-//    }
 }
 
 //MARK: ProfileView configure layout

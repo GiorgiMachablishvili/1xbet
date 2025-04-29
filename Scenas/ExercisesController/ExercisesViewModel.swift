@@ -12,4 +12,8 @@ class ExercisesViewModel {
         .init(workoutName: "Ski walking", workoutIconName: "ski", distance: "658.83", activityCount: "14"),
         .init(workoutName: "Walking", workoutIconName: "walk", distance: "658.83", activityCount: "14")
     ]
+
+    var exerciseCount: Int {
+        return exerciseOptions.count
+    }
 }

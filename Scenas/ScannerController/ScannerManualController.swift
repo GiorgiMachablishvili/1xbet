@@ -114,23 +114,10 @@ class ScannerManualController: UIViewController {
     private lazy var workoutDistanceTextField: TimeDigitTextField = {
         let view = TimeDigitTextField()
         view.placeholder = "0"
-        view.keyboardType = .numbersAndPunctuation
+        view.keyboardType = .numberPad
         view.addTarget(self, action: #selector(handleInputChange), for: .editingChanged)
         return view
     }()
-
-//    private lazy var workoutDistanceTextField: UITextField = {
-//        let view = UITextField(frame: .zero)
-//        view.font = UIFont.funnelDesplayMedium(size: 24)
-//        view.textColor = .whiteColor
-//        view.backgroundColor = .grayColorBackgroundColor
-//        view.textAlignment = .center
-//        view.keyboardType = .numberPad
-//        view.layer.cornerRadius = 16
-//        view.clipsToBounds = true
-////        workoutDistanceTextField.addTarget(self, action: #selector(handleInputChange), for: .editingChanged)
-//        return view
-//    }()
 
     private lazy var kmOrMileLabel: UILabel = {
         let view = UILabel(frame: .zero)
@@ -179,6 +166,7 @@ class ScannerManualController: UIViewController {
 
         updatePlaceHolder()
         tabGestureChooseWorkout()
+        setupKeyboardDismissGesture()
     }
 
     private func setup() {
@@ -407,6 +395,17 @@ class ScannerManualController: UIViewController {
     @objc private func pressSaveButton() {
 
     }
+
+    private func setupKeyboardDismissGesture() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tapGesture.cancelsTouchesInView = false
+        view.addGestureRecognizer(tapGesture)
+    }
+
+    @objc private func dismissKeyboard() {
+        view.endEditing(true)
+    }
+
 }
 
 extension ChooseWorkout {

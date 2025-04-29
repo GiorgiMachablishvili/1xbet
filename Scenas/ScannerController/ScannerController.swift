@@ -7,7 +7,6 @@ import CoreImage
 import AVFoundation
 import Vision
 
-
 class ScannerController: UIViewController {
 
     private var photoOutput = AVCapturePhotoOutput()
@@ -187,6 +186,23 @@ class ScannerController: UIViewController {
         navigationController?.pushViewController(ScannerManualVC, animated: true)
     }
 
+    @objc private func pressScanButton() {
+        if scanButton.title(for: .normal) == "Go next" {
+            guard let image = capturedImage else {
+                print("⚠️ No captured image available.")
+                return
+            }
+            // Re-run OCR and handle result in callback
+            extractDataFromImage(image)
+
+        } else {
+            let settings = AVCapturePhotoSettings()
+            settings.flashMode = .off
+            photoOutput.capturePhoto(with: settings, delegate: self)
+            scanAgainButton.isHidden = false
+        }
+    }
+
     private func setupLiveCamera() {
         captureSession = AVCaptureSession()
         guard let videoDevice = AVCaptureDevice.default(for: .video) else {
@@ -226,23 +242,6 @@ class ScannerController: UIViewController {
         // ✅ Start session on background thread
         DispatchQueue.global(qos: .userInitiated).async {
             self.captureSession?.startRunning()
-        }
-    }
-
-    @objc private func pressScanButton() {
-        if scanButton.title(for: .normal) == "Go next" {
-            guard let image = capturedImage else {
-                print("⚠️ No captured image available.")
-                return
-            }
-            // Re-run OCR and handle result in callback
-            extractDataFromImage(image)
-
-        } else {
-            let settings = AVCapturePhotoSettings()
-            settings.flashMode = .off
-            photoOutput.capturePhoto(with: settings, delegate: self)
-            scanAgainButton.isHidden = false
         }
     }
 
@@ -349,7 +348,6 @@ class ScannerController: UIViewController {
         }
     }
 }
-
 
 extension ScannerController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
@@ -476,7 +474,6 @@ extension ScannerController: AVCapturePhotoCaptureDelegate {
         }
     }
 }
-
 
 extension ScannerController: AVCaptureVideoDataOutputSampleBufferDelegate {
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {

@@ -5,18 +5,7 @@ import SnapKit
 
 class HomeController: UIViewController {
 
-    private var workoutsHistory: [WorkoutHistory] = [
-        .init(workoutTitle: "Treadmill", workoutImage: "treadmill", workoutDistance: "658.83", workoutDuration: "3m25s", workoutData: "12:08 pm"),
-        .init(workoutTitle: "Swimming", workoutImage: "swimming", workoutDistance: "658.83", workoutDuration: "3m25s", workoutData: "12:08 pm"),
-        .init(workoutTitle: "Swimming", workoutImage: "swimming", workoutDistance: "658.83", workoutDuration: "3m25s", workoutData: "12:08 pm"),
-        .init(workoutTitle: "Treadmill", workoutImage: "treadmill", workoutDistance: "658.83", workoutDuration: "3m25s", workoutData: "12:08 pm"),
-        .init(workoutTitle: "Swimming", workoutImage: "swimming", workoutDistance: "658.83", workoutDuration: "3m25s", workoutData: "12:08 pm"),
-        .init(workoutTitle: "Ski", workoutImage: "ski", workoutDistance: "658.83", workoutDuration: "3m25s", workoutData: "12:08 pm"),
-        .init(workoutTitle: "Treadmill", workoutImage: "treadmill", workoutDistance: "658.83", workoutDuration: "3m25s", workoutData: "12:08 pm"),
-        .init(workoutTitle: "Swimming", workoutImage: "swimming", workoutDistance: "658.83", workoutDuration: "3m25s", workoutData: "12:08 pm"),
-        .init(workoutTitle: "Ski", workoutImage: "ski", workoutDistance: "658.83", workoutDuration: "3m25s", workoutData: "12:08 pm"),
-        .init(workoutTitle: "Running outside", workoutImage: "run", workoutDistance: "658.83", workoutDuration: "3m25s", workoutData: "12:08 pm")
-    ]
+    private let viewModel = HomeViewModel()
 
     private lazy var noPracticeView: NoPracticeView = {
         let view = NoPracticeView()
@@ -79,10 +68,6 @@ class HomeController: UIViewController {
             make.height.equalTo(500 * Constraint.yCoeff)
         }
 
-//        noPracticeView.snp.makeConstraints { make in
-//            make.edges.equalToSuperview() // full screen
-//        }
-
         collectionView.snp.remakeConstraints { make in
             make.top.equalTo(topView.snp.bottom).offset(24 * Constraint.yCoeff)
             make.leading.bottom.trailing.equalToSuperview()
@@ -90,11 +75,13 @@ class HomeController: UIViewController {
     }
 
     func hideOrNotNoPracticeView() {
-        if workoutsHistory.count == 0 {
-            noPracticeView.isHidden = false
-        } else {
-            noPracticeView.isHidden = true
-        }
+//        if viewModel.workoutsHistory.count == 0 {
+//            noPracticeView.isHidden = false
+//        } else {
+//            noPracticeView.isHidden = true
+//        }
+
+        noPracticeView.isHidden = viewModel.hasWorkouts
     }
 
     private func navigateToScannerManual() {
@@ -106,14 +93,14 @@ class HomeController: UIViewController {
 
 extension HomeController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return workoutsHistory.count
+        return viewModel.workoutsCount
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "HistoryCell", for: indexPath) as? HistoryCell else {
             return UICollectionViewCell()
         }
-        cell.configure(with: workoutsHistory[indexPath.item])
+        cell.configure(with: viewModel.workoutsHistory[indexPath.item])
         return cell
     }
 
@@ -122,7 +109,7 @@ extension HomeController: UICollectionViewDelegate, UICollectionViewDataSource, 
             guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "WorkoutHistoryHeaderView", for: indexPath) as? WorkoutHistoryHeaderView else {
                 return UICollectionReusableView()
             }
-            header.configure(with: workoutsHistory.count)
+            header.configure(with: viewModel.workoutsCount)
             header.didTapPlusButton = { [weak self] in
                 self?.navigateToScannerManual()
             }
