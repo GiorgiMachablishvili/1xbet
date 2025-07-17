@@ -1,9 +1,4 @@
-//
-//  ViewController.swift
-//  1xbet
-//
-//  Created by Gio's Mac on 27.03.25.
-//
+
 
 import UIKit
 
